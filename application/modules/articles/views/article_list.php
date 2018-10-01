@@ -9,9 +9,7 @@
     </section>
     <section class="content">
         <?php if ($this->session->userdata('message') !== NULL ): ?>
-        <div class="callout callout-info">
             <?php echo $this->session->userdata('message') ?>
-        </div>
         <?php endif ?>
         <div class="row">
             <div class="col-xs-12">
@@ -38,16 +36,10 @@
                                     <td><?php echo ucwords($article->author) ?></td>
                                     <td><?php echo ucwords($article->category) ?></td>
                                     <td>
-                                    <?php                                       
-                                        $tags = $this->db->select('a.name')
-                                                         ->from('tb_tags a')
-                                                         ->join('tb_tags_articles b', 'b.tag_id = a.id', 'left')
-                                                         ->where('b.article_id', $article->id)
-                                                         ->get();
-                                        foreach ($tags->result() as $tag) {
-                                            echo ucwords($tag->name)."<br>";
-                                        }
-                                    ?>
+                                    <?php $tags = explode(',', $article->tag) ?>
+                                        <?php foreach ($tags as $key => $value) :?>
+                                            <p class="label label-primary"><i class="fa fa-tags"></i> <?php echo ucwords($tags[$key]) ?></p>
+                                    <?php endforeach ?>                                  
                                     </td>
                                     <td>
                                         <?php 

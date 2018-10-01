@@ -57,21 +57,30 @@ class Articles extends MX_Controller
                     'user_id' => $this->session->userdata('id'),
                     'status' => $this->input->post('status'), 
                     'slug' => url_title($this->input->post('title')), 
-                    'tags' => $this->input->post('tag_id'), 
+                    'tag' => implode(',', $this->input->post('tag')), 
                     'date' => date('y-m-d'),
                     'article_image' => $img['file_name'], 
                 );
             } else {
                 $error = $this->upload->display_errors();
-                $this->session->set_flashdata('message', $error);                                               
+                $this->session->set_flashdata(
+                    'message', 
+                    '<div class="callout callout-danger"><p>'.$error.'</p></div>'                
+                );                                              
                 redirect(site_url('at-admin/article/create'));
             }
 
             if ($this->article_model->save($data)) {                 
-                $this->session->set_flashdata('message', 'Data berhasil disimpan !');
+                $this->session->set_flashdata(
+                    'message', 
+                    '<div class="callout callout-info"><p>Data berhasil disimpan !</p></div>'                
+                );
                 redirect(site_url('at-admin/article/create'));
             } else {
-                $this->session->set_flashdata('message', 'Data gagal disimpan !');
+                $this->session->set_flashdata(
+                    'message', 
+                    '<div class="callout callout-danger"><p>Data gagal disimpan !</p></div>'                
+                );
                 redirect(site_url('at-admin/article/create'));
             }
         }
@@ -111,9 +120,8 @@ class Articles extends MX_Controller
                     'user_id' => $this->session->userdata('id'),
                     'status' => $this->input->post('status'), 
                     'slug' => url_title($this->input->post('title')), 
-                    'tags' => $this->input->post('tag_id'), 
+                    'tag' => implode(',', $this->input->post('tag')),
                     'date' => date('y-m-d'),
-                    'article_image' => ''
                 );
             } else {
                 if ($this->upload->do_upload('image')) {
@@ -125,24 +133,52 @@ class Articles extends MX_Controller
                         'user_id' => $this->session->userdata('id'),
                         'status' => $this->input->post('status'), 
                         'slug' => url_title($this->input->post('title')), 
-                        'tags' => $this->input->post('tag_id'), 
+                        'tag' => implode(',', $this->input->post('tag')), 
                         'date' => date('y-m-d'),
                         'article_image' => $img['file_name'], 
                     );
                 } else {
                     $error = $this->upload->display_errors();
-                    $this->session->set_flashdata('message', $error);                                               
+                    $this->session->set_flashdata(
+                        'message', 
+                        '<div class="callout callout-danger"><p>'.$error.'</p></div>'                
+                    );                                               
                     redirect(site_url('at-admin/article/create'));
                 }
             }
-            $this->article_model->update($id, $data);
-            // if ($this->article_model->update($id, $data)) {                 
-            //     $this->session->set_flashdata('message', 'Data berhasil diedit !');
-            //     redirect(site_url('at-admin/article/create'));
-            // } else {
-            //     $this->session->set_flashdata('message', 'Data gagal diedit !');
-            //     redirect(site_url('at-admin/article/create'));
-            // }
+
+            if ($this->article_model->update($id, $data)) {                 
+                $this->session->set_flashdata(
+                    'message', 
+                    '<div class="callout callout-info"><p>Data berhasil diedit !</p></div>'                
+                );
+                redirect(site_url('at-admin/article/create'));
+            } else {
+                $this->session->set_flashdata(
+                    'message', 
+                    '<div class="callout callout-danger"><p>Data gagal diedit !</p></div>'                
+                );
+                redirect(site_url('at-admin/article/create'));
+            }
+        }
+    }
+
+    function destroy($id)
+    {
+        $article = $this->article_model->article_by_id($id);
+        unlink('./uploaded/image/'.$article->article_image);
+        if ($this->article_model->delete($id)) {
+            $this->session->set_flashdata(
+                'message', 
+                '<div class="callout callout-info"><p>Data berhasil dihapus !</p></div>'                
+            );
+            redirect(site_url('at-admin/article'));
+        } else {
+            $this->session->set_flashdata(
+                'message', 
+                '<div class="callout callout-danger"><p>Data gagal dihapus !</p></div>'                
+            );
+            redirect(site_url('at-admin/article'));
         }
     }
 

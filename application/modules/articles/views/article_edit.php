@@ -22,7 +22,7 @@
                             Post
                         </div>
                         <div class="box-body pad">
-                            <textarea id="editor1" name="editor1" rows="10" cols="80">
+                            <textarea id="editor1" name="content" rows="10" cols="80">
                                 <?php echo $article->content ?>
                             </textarea>
                         </div>
@@ -43,9 +43,9 @@
                                 <label for="category_id">Category</label>
                                 <select class="form-control select2" name="category_id">
                                 <?php foreach ($categories->result() as $category): ?>
-                                    <option value="<?php echo $category->name ?>"
+                                    <option value="<?php echo $category->id ?>"
                                     <?php 
-                                        if ($article->category_id == $category->id) {
+                                        if ($article->category_id === $category->id) {
                                             echo "selected";
                                         } else {
                                             echo "";
@@ -56,19 +56,39 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="tag">Tag</label>
+                                <select class="form-control select2" name="tag[]" id="tag" multiple="multiple" data-placeholder="Select a State"
+                                        style="width: 100%;">
+                                <?php foreach ($tags->result() as $tag): ?> 
+                                        <option value="<?php echo $tag->slug ?>"
+                                        <?php 
+                                            $article_tag = explode(',', $article->tag);
+                                            foreach ($article_tag as $key => $value) {
+                                                if ($tag->slug === $article_tag[$key]) {
+                                                    echo "selected";
+                                                } else {
+                                                    echo "";
+                                                }
+                                            }
+                                        ?>
+                                        ><?php echo ucwords($tag->name) ?></option>
+                                <?php endforeach ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="status">Status</label>
-                                <select name="" class="form-control" id="status">
+                                <select name="status" class="form-control" id="status">
                                     <option value=""></option>
                                     <option value="published"
                                     <?php
-                                        if ($article->status == 'published') {
+                                        if ($article->status === 'published') {
                                             echo "selected";
                                         }
                                     ?>
                                     >Published</option>
                                     <option value="not published"
                                     <?php
-                                        if ($article->status == 'not published') {
+                                        if ($article->status === 'not published') {
                                             echo "selected";
                                         }
                                     ?>
@@ -77,7 +97,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="image">Image</label>
-                                <input type="file" class="form-control" name="image" value="<?php echo set_value('image') ?>">
+                                <input type="file" class="form-control" name="image">
                                 <div class="help-block">
                                     Format Image should be JPG|JPEG|PNG
                                 </div>
@@ -92,31 +112,7 @@
                             </button>
                         </div>
                         </div>
-                        <div class="box-body" style="display:block; width:100%; height:150px; overflow:auto;">
-                            <?php foreach ($tags->result() as $tag): ?>
-                            <div class="form-group" style="margin-bottom:0">
-                                <label>
-                                    <input type="checkbox" name="tag_id[]" class="minimal" value="<?php echo $tag->id ?>"
-                                    <?php
-                                        $row_tags = $this->db->select('a.id')
-                                                        ->from('tb_tags a')
-                                                        ->join('tb_tags_articles b', 'b.tag_id = a.id', 'left')
-                                                        ->where('b.article_id', $article->id)
-                                                        ->get();
-                                        foreach ($row_tags->result() as $row) {
-                                            if ($tag->id == $row->id) {
-                                                echo " checked";
-                                            } else {
-                                                echo "";
-                                            }
-                                        }      
-                                    ?> 
-                                    >
-                                    <?php echo ucwords($tag->name) ?> 
-                                </label>                               
-                            </div>
-                            <?php endforeach ?>
-                        </div>
+                        <!-- <div class="box-body" style="display:block; width:100%; height:150px; overflow:auto;"> -->
                     </div>
                 </div>
             </div>
