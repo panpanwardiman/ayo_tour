@@ -8,7 +8,7 @@ class Category extends MX_Controller {
         parent::__construct();
         $this->load->model('category_model');
         $this->load->library('upload');
-        is_logged_id();
+        is_logged_in();
     }
 
     function index()
