@@ -21,13 +21,13 @@ class Auth extends MX_Controller
         $this->form_validation->set_rules('password', 'Password', 'required');
 
         if ($this->form_validation->run($this) == FALSE) {
-            redirect(site_url('auth'));
+            redirect(site_url('at-admin/auth'));
         } else {
             $email = $this->input->post('email');
             $password = $this->input->post('password');
 
             $row = $this->auth_model->login($email);
-            if ($row) {
+            if ($row > 0) {
                 $password_hash = $row->password;
                 if (password_verify($password, $password_hash)) {
                     $data = array(
@@ -41,6 +41,9 @@ class Auth extends MX_Controller
                     $this->session->set_flashdata('message', 'Email atau Password salah !');
                     redirect(site_url('at-admin/auth'));
                 }
+            } else {
+                $this->session->set_flashdata('message', 'Email atau Password salah !');
+                redirect(site_url('at-admin/auth'));
             }
         }
     }

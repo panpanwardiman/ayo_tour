@@ -39,9 +39,9 @@
           </a>
           <ul class="treeview-menu">
             <?php echo (isset($halaman) && $halaman[1] == '') ? '<li class="active">' : '<li>' ?>
-              <a href="<?php echo site_url('at-admin/packages') ?>"><i class="fa fa-circle-o"></i> All Packages</a></li>
+              <a href="<?php echo site_url('at-admin/package') ?>"><i class="fa fa-circle-o"></i> All Packages</a></li>
             <?php echo (isset($halaman) && $halaman[1] == '') ? '<li class="active">' : '<li>' ?>
-              <a href="<?php echo site_url('at-admin/packages/create') ?>"><i class="fa fa-circle-o"></i> Add New</a></li>
+              <a href="<?php echo site_url('at-admin/package/create') ?>"><i class="fa fa-circle-o"></i> Add New</a></li>
           </ul>
         </li>
         <?php echo (isset($halaman) && $halaman == 'service') ? '<li class="active">': '<li>' ?>

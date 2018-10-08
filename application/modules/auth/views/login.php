@@ -28,7 +28,7 @@
   </div>
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
-    <form action="<?php echo site_url('auth/login')?>" method="post">
+    <form action="<?php echo site_url('at-admin/auth/login')?>" method="post">
       <div class="form-group has-feedback">
         <input type="email" class="form-control" name="email" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
